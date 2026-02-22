@@ -1,6 +1,5 @@
 import 'dart:ui' as ui; // 추가: Size 충돌 해결을 위한 alias
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_naver_map_web/flutter_naver_map_web.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wedding_invitation/painter/parking_icon_painter.dart';
