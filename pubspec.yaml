@@ -1,0 +1,38 @@
+name: wedding_invitation
+description: "A Flutter Web Wedding Invitation"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+
+  # 1. 외부 링크 연결 (카톡/네이버 지도 앱 실행용)
+  url_launcher: ^6.3.2
+
+  # 2. 네이버 지도 웹 전용 라이브러리
+  flutter_naver_map_web: ^0.0.1  # 보내주신 최신 패키지 버전
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+
+  # 폰트 설정 (NotoSansKR 파일이 assets/fonts 폴더에 있어야 합니다)
+  fonts:
+    - family: NotoSansKR
+      fonts:
+        - asset: assets/fonts/NotoSansKR-Regular.ttf
+        - asset: assets/fonts/NotoSansKR-Bold.ttf
+          weight: 700

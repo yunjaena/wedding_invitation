@@ -1,0 +1,14 @@
+{
+    "name": "wedding_invitation",
+    "short_name": "wedding_invitation",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0175C2",
+    "theme_color": "#0175C2",
+    "description": "Wedding invitation",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+
+    ]
+}

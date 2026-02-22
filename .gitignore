@@ -117,3 +117,31 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
+
+# 1. Flutter/Dart 관련 캐시 및 빌드 결과물
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+
+# 2. 웹 관련 (Cloudflare Pages 배포 시 필요 없음)
+.temp_layout/
+# 만약 배포 시 직접 폰트를 넣었다면 build/ 폴더 외의 파일은 무시 가능
+
+# 3. 운영체제 관련 쓰레기 파일
+.DS_Store
+Thumbs.db
+
+# 4. IDE (코드 에디터) 관련 설정
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# 5. 환경 변수 및 비밀 키 (매우 중요!)
+# API 키가 직접 노출된 파일이 있다면 반드시 제외해야 합니다.
+.env*
