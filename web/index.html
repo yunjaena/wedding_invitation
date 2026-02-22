@@ -1,55 +1,88 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base href="$FLUTTER_BASE_HREF">
-  <meta charset="UTF-8">
+  <base href="/"> <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>윤재 & 세정 결혼식에 초대합니다</title>
 
   <link rel="icon" type="image/png" href="favicon.ico"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Rounded" rel="stylesheet">
+
   <meta property="og:type" content="website">
   <meta property="og:title" content="나윤재 ❤️ 신세정 결혼합니다">
   <meta property="og:description" content="2026년 4월 11일(토) 오후 5시 | 베스트웨스턴프리미어 강남">
   <meta property="og:image" content="https://wedding-invitation-2b1.pages.dev/icons/preview.jpeg">
   <meta property="og:url" content="https://wedding-invitation-2b1.pages.dev/">
 
-  <link rel="apple-touch-icon" href="icons/intro.jpeg">
-
   <style>
+    /* 로딩 화면 레이아웃 */
     #loading-indicator {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background-color: white; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; z-index: 9999;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999; /* 가장 위에 오도록 보장 */
     }
+
+    /* 원형 로더 크기 대폭 확대 */
     .loader {
-      border: 4px solid #f3f3f3; border-top: 4px solid #FFA4A4;
-      border-radius: 50%; width: 40px; height: 40px;
+      width: 70px;
+      height: 70px;
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #FFA4A4;
+      border-radius: 50%;
       animation: spin 1s linear infinite;
     }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* 텍스트 가독성 */
+    .loading-text {
+      margin-top: 30px;
+      font-family: sans-serif;
+      font-size: 20px; /* 모바일에서 큼직하게 */
+      font-weight: bold;
+      color: #555;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
+
 <div id="loading-indicator">
   <div class="loader"></div>
-  <p style="margin-top:20px; font-family:sans-serif; color:#666;">청첩장을 불러오고 있습니다...</p>
+  <p class="loading-text">청첩장을 불러오고 있습니다...</p>
 </div>
 
 <script>
   window.addEventListener('load', function(ev) {
+    // Flutter 엔진이 로드되기 전까지는 로딩 화면을 지우지 않습니다.
     {{flutter_js}}
     {{flutter_build_config}}
 
     _flutter.loader.load({
       onEntrypointLoaded: function(engineInitializer) {
         engineInitializer.initializeEngine().then(function(appRunner) {
-          document.getElementById('loading-indicator').remove();
-          appRunner.runApp();
+          appRunner.runApp().then(function() {
+            // 앱 실행이 완전히 완료된 후 로딩 인디케이터 제거
+            var loader = document.getElementById('loading-indicator');
+            if (loader) {
+              loader.style.display = 'none'; // 혹은 remove()
+            }
+          });
         });
       }
     });
   });
 </script>
+
 </body>
 </html>

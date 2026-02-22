@@ -64,18 +64,20 @@ class WeddingScreen extends StatelessWidget {
   Widget _buildCover() {
     return Column(
       children: [
-        Image.asset(
-          WeddingConfig.introImage,
-          height: 550,
-          width: double.infinity,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              height: 550,
-              color: Colors.grey[300],
-              child: const Icon(Icons.image_not_supported),
-            );
-          },
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Image.asset(
+            WeddingConfig.introImage,
+            width: double.infinity,
+            fit: BoxFit.fitWidth,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                height: 300,
+                color: Colors.grey[300],
+                child: const Icon(Icons.image_not_supported),
+              );
+            },
+          ),
         ),
         const SizedBox(height: 32),
         const Text(
