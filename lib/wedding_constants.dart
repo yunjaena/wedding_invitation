@@ -11,7 +11,7 @@ class WeddingConfig {
   static const String groomMotherName = "정진희";
   static const String brideFatherName = "신세식";
   static const String brideMotherName = "이영자";
-  static const String groomTitle = "장손";
+  static const String groomTitle = "장남";
   static const String brideTitle = "차녀";
   static const String weddingDateText = "2026년 4월 11일 토요일 오후 5시";
   static const String weddingLocation = "베스트웨스턴 프리미어 강남호텔";
