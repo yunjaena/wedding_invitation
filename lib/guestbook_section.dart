@@ -84,7 +84,7 @@ class _GuestbookSectionState extends State<GuestbookSection> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-              color: Colors.black..withValues(alpha: 0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 20,
               offset: const Offset(0, 10))
         ],
@@ -152,7 +152,7 @@ class _GuestbookSectionState extends State<GuestbookSection> {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-              color: WeddingConfig.dividerColor..withValues(alpha: 0.2)),
+              color: WeddingConfig.dividerColor.withValues(alpha: 0.2)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -197,7 +197,7 @@ class _GuestbookSectionState extends State<GuestbookSection> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                    color: WeddingConfig.dividerColor..withValues(alpha: 0.2)),
+                    color: WeddingConfig.dividerColor.withValues(alpha: 0.2)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,7 +260,7 @@ class _GuestbookSectionState extends State<GuestbookSection> {
           hintStyle: _hintStyle,
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-              color: WeddingConfig.pointPink..withValues(alpha: 0.3),
+              color: WeddingConfig.pointPink.withValues(alpha: 0.3),
               width: 1.0,
             ),
           ),
@@ -318,7 +318,7 @@ class _GuestbookSectionState extends State<GuestbookSection> {
           hintStyle: _hintStyle,
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-              color: WeddingConfig.pointPink..withValues(alpha: 0.3),
+              color: WeddingConfig.pointPink.withValues(alpha: 0.3),
               width: 1.0,
             ),
           ),
