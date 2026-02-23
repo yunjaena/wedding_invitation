@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map_web/flutter_naver_map_web.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wedding_invitation/lazy_load_map.dart';
 import 'package:wedding_invitation/wedding_constants.dart';
 import 'package:wedding_invitation/painter/parking_icon_painter.dart';
 import 'package:wedding_invitation/painter/subway_icon_painter.dart';
@@ -66,7 +67,7 @@ class WeddingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100], // 배경은 연회색으로 하여 중앙 컨테이너 강조
+      backgroundColor: Colors.grey[100],
       body: Center(
         child: Container(
           width: 430, // 모바일 너비 고정
@@ -272,23 +273,7 @@ class WeddingScreen extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: const NaverMapWeb(
-                clientId: apiKey,
-                initialLatitude: WeddingConfig.lat,
-                initialLongitude: WeddingConfig.lng,
-                initialZoom: 16,
-                zoomControl: true,
-                mapDataControl: true,
-                places: [
-                  Place(
-                    id: 'wedding_hall',
-                    name: WeddingConfig.weddingLocation,
-                    latitude: WeddingConfig.lat,
-                    longitude: WeddingConfig.lng,
-                    description: WeddingConfig.address,
-                  ),
-                ],
-              ),
+              child: const LazyLoadMap(apiKey: apiKey),
             ),
           ),
           const SizedBox(height: 16),

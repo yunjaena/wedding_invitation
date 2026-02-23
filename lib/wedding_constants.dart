@@ -14,7 +14,7 @@ class WeddingConfig {
   static const String groomTitle = "장손";
   static const String brideTitle = "차녀";
   static const String weddingDateText = "2026년 4월 11일 토요일 오후 5시";
-  static const String weddingLocation = "베스트웨스턴프리미어 강남호텔";
+  static const String weddingLocation = "베스트웨스턴 프리미어 강남호텔";
   static const String targetDateTime = "2026-04-11 17:00:00";
 
   static const String address = "서울 강남구 봉은사로 139";
