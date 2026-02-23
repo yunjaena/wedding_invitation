@@ -142,6 +142,13 @@ Thumbs.db
 *.ipr
 *.iws
 
-# 5. 환경 변수 및 비밀 키 (매우 중요!)
-# API 키가 직접 노출된 파일이 있다면 반드시 제외해야 합니다.
+# 5. 환경 변수 및 비밀 키
 .env*
+
+
+
+lib/firebase_options.dart
+
+# 안드로이드/iOS 프로젝트 내의 설정 파일
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist

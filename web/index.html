@@ -6,104 +6,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <title>윤재 & 세정 결혼식에 초대합니다</title>
-
-  <link rel="icon" type="image/png" href="favicon.ico"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Rounded" rel="stylesheet">
-
   <meta property="og:type" content="website">
   <meta property="og:title" content="나윤재 ❤️ 신세정 결혼합니다">
   <meta property="og:description" content="2026년 4월 11일(토) 오후 5시 | 베스트웨스턴프리미어 강남">
   <meta property="og:image" content="https://wedding-invitation-2b1.pages.dev/icons/preview.jpeg">
   <meta property="og:url" content="https://wedding-invitation-2b1.pages.dev/">
+  <link rel="icon" type="image/png" href="favicon.ico"/>
   <link rel="apple-touch-icon" href="icons/intro.jpeg">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Rounded" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
   <script>
     var W = {
-      groomName: '윤재',
-      brideName: '세정',
-      date: '2026. 04. 11',
-      title: '결혼식에 초대합니다'
+      groomName: '윤재', brideName: '세정',
+      date: '2026. 04. 11', title: '결혼식에 초대합니다'
     };
   </script>
 
   <style>
+    /* 사용자님의 핑크 로딩 스타일 */
     #loading-indicator {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: linear-gradient(180deg, #fff5f5 0%, #ffffff 50%, #fff5f5 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 99999;
-      animation: fadeIn 0.3s ease-out;
-      transition: opacity 0.5s ease-out;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 99999; transition: opacity 0.5s ease-out;
     }
-
-    #loading-indicator.fade-out {
-      opacity: 0;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .loading-names {
-      font-family: 'Georgia', 'Times New Roman', serif;
-      font-size: 26px;
-      letter-spacing: 6px;
-      color: #333;
-      animation: slideUp 0.8s ease-out both;
-    }
-
-    .loading-ampersand {
-      display: block;
-      font-family: 'Georgia', serif;
-      font-size: 20px;
-      color: #FFA4A4;
-      margin: 12px 0;
-      animation: slideUp 0.8s ease-out 0.15s both;
-    }
-
-    .loading-date {
-      font-family: sans-serif;
-      font-size: 13px;
-      letter-spacing: 3px;
-      color: #999;
-      margin-top: 8px;
-      animation: slideUp 0.8s ease-out 0.3s both;
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .loading-bar-track {
-      width: 120px;
-      height: 2px;
-      background: #f0e0e0;
-      border-radius: 1px;
-      margin-top: 40px;
-      overflow: hidden;
-      animation: slideUp 0.8s ease-out 0.45s both;
-    }
-
-    .loading-bar-fill {
-      width: 40%;
-      height: 100%;
-      background: #FFA4A4;
-      border-radius: 1px;
-      animation: barSlide 1.2s ease-in-out infinite;
-    }
-
-    @keyframes barSlide {
-      0% { transform: translateX(-120px); }
-      100% { transform: translateX(300px); }
-    }
+    #loading-indicator.fade-out { opacity: 0; }
+    .loading-names { font-family: 'Georgia', serif; font-size: 26px; letter-spacing: 6px; color: #333; }
+    .loading-ampersand { display: block; font-family: 'Georgia', serif; font-size: 20px; color: #FFA4A4; margin: 12px 0; }
+    .loading-date { font-family: sans-serif; font-size: 13px; letter-spacing: 3px; color: #999; margin-top: 8px; }
+    .loading-bar-track { width: 120px; height: 2px; background: #f0e0e0; margin-top: 40px; overflow: hidden; }
+    .loading-bar-fill { width: 40%; height: 100%; background: #FFA4A4; animation: barSlide 1.2s infinite; }
+    @keyframes barSlide { 0% { transform: translateX(-120px); } 100% { transform: translateX(300px); } }
   </style>
 </head>
 <body>
@@ -113,37 +50,38 @@
   <span class="loading-ampersand">&</span>
   <div class="loading-names" id="l-bride"></div>
   <div class="loading-date" id="l-date"></div>
-  <div class="loading-bar-track">
-    <div class="loading-bar-fill"></div>
-  </div>
+  <div class="loading-bar-track"><div class="loading-bar-fill"></div></div>
 </div>
 
 <script>
-  // 설정값 텍스트 주입
+  // 1. 로딩 데이터 주입 (기존 유지)
   document.getElementById('l-groom').textContent = W.groomName;
   document.getElementById('l-bride').textContent = W.brideName;
   document.getElementById('l-date').textContent = W.date;
 
-  window.addEventListener('load', function(ev) {
-    {{flutter_js}}
-    {{flutter_build_config}}
+  // 2. 최신 부트스트랩 로직
+  {{flutter_js}}
+  {{flutter_build_config}}
 
-    _flutter.loader.load({
-      onEntrypointLoaded: function(engineInitializer) {
-        engineInitializer.initializeEngine().then(function(appRunner) {
-          appRunner.runApp().then(function() {
-            // 앱 실행 완료 후 페이드 아웃 효과와 함께 제거
-            var loader = document.getElementById('loading-indicator');
-            if (loader) {
-              loader.classList.add('fade-out');
-              setTimeout(function() {
-                loader.remove();
-              }, 500);
-            }
-          });
-        });
-      }
-    });
+  // 에러 방지를 위해 최소한의 설정으로 호출합니다.
+  _flutter.loader.load({
+    onEntrypointLoaded: async function(engineInitializer) {
+      // 빌드 호환성 에러를 피하기 위해 initializeEngine에서 renderer를 명시합니다.
+      const appRunner = await engineInitializer.initializeEngine({
+        renderer: "html" // 네이버 지도와 파이어베이스 통신을 위해 필수
+      });
+
+      await appRunner.runApp();
+
+      // 앱 실행 후 로딩 화면 제거
+      window.setTimeout(function() {
+        var loader = document.getElementById('loading-indicator');
+        if (loader) {
+          loader.classList.add('fade-out');
+          setTimeout(() => loader.remove(), 500);
+        }
+      }, 200);
+    }
   });
 </script>
 </body>

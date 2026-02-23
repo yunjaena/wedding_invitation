@@ -1,17 +1,44 @@
 import 'dart:ui' as ui;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map_web/flutter_naver_map_web.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-// 작성하신 파일명에 맞춰 import 하세요.
 import 'package:wedding_invitation/wedding_constants.dart';
 import 'package:wedding_invitation/painter/parking_icon_painter.dart';
 import 'package:wedding_invitation/painter/subway_icon_painter.dart';
 import 'account_section.dart';
 import 'count_down_timer.dart';
 import 'fade_in_on_scroll.dart';
+import 'firebase_options.dart';
+import 'guestbook_section.dart';
 
-void main() {
+void main() async {
+  // 1. 플러터 엔진 초기화 보장
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Future.delayed(const Duration(milliseconds: 100));
+
+  try {
+    // 2. Firebase 초기화 (설정값이 완벽해야 합니다)
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    FirebaseFirestore.instance.settings = const Settings(
+      persistenceEnabled: false, // 웹에서는 캐시가 오히려 전송을 방해할 수 있음
+      sslEnabled: true,
+      host: 'firestore.googleapis.com',
+    );
+
+    print("Firebase 초기화 성공");
+  } catch (e) {
+    // 만약 여기서 에러가 나면 화면이 하얗게 멈춥니다.
+    // 에러를 출력하고 일단 앱은 실행되도록 처리합니다.
+    print("Firebase 초기화 실패: $e");
+  }
+
+  // 3. 앱 실행
   runApp(const WeddingApp());
 }
 
@@ -90,6 +117,13 @@ class WeddingScreen extends StatelessWidget {
                   key: ValueKey('account'),
                   child: AccountSection(),
                 ),
+
+                const Divider(height: 80, thickness: 1, color: Colors.black12),
+                const FadeInOnScroll(
+                  key: ValueKey('guestbook'),
+                  child: GuestbookSection(), // 새로 만든 방명록 위젯
+                ),
+
                 const SizedBox(height: 100),
               ],
             ),
