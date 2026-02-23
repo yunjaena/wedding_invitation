@@ -1,8 +1,8 @@
 import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_map_web/flutter_naver_map_web.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wedding_invitation/lazy_load_map.dart';
 import 'package:wedding_invitation/wedding_constants.dart';
@@ -31,12 +31,10 @@ void main() async {
       sslEnabled: true,
       host: 'firestore.googleapis.com',
     );
-
-    print("Firebase 초기화 성공");
   } catch (e) {
-    // 만약 여기서 에러가 나면 화면이 하얗게 멈춥니다.
-    // 에러를 출력하고 일단 앱은 실행되도록 처리합니다.
-    print("Firebase 초기화 실패: $e");
+    if (kDebugMode) {
+      print("Firebase 초기화 실패: $e");
+    }
   }
 
   // 3. 앱 실행

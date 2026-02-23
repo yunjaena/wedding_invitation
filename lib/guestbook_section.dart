@@ -33,7 +33,7 @@ class _GuestbookSectionState extends State<GuestbookSection> {
 
   final TextStyle _hintStyle = TextStyle(
     fontSize: 13,
-    color: Colors.grey.withOpacity(0.5),
+    color: Colors.grey.withValues(alpha: 0.5),
   );
 
   void _showStyledDialog(
@@ -84,7 +84,7 @@ class _GuestbookSectionState extends State<GuestbookSection> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black..withValues(alpha: 0.04),
               blurRadius: 20,
               offset: const Offset(0, 10))
         ],
@@ -146,13 +146,13 @@ class _GuestbookSectionState extends State<GuestbookSection> {
         hintText: hint,
         hintStyle: _hintStyle,
         filled: true,
-        fillColor: WeddingConfig.accountBackground.withOpacity(0.3),
+        fillColor: WeddingConfig.accountBackground.withValues(alpha: 0.3),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide:
-              BorderSide(color: WeddingConfig.dividerColor.withOpacity(0.2)),
+          borderSide: BorderSide(
+              color: WeddingConfig.dividerColor..withValues(alpha: 0.2)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -197,7 +197,7 @@ class _GuestbookSectionState extends State<GuestbookSection> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                    color: WeddingConfig.dividerColor.withOpacity(0.2)),
+                    color: WeddingConfig.dividerColor..withValues(alpha: 0.2)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,7 +260,7 @@ class _GuestbookSectionState extends State<GuestbookSection> {
           hintStyle: _hintStyle,
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-              color: WeddingConfig.pointPink.withOpacity(0.3),
+              color: WeddingConfig.pointPink..withValues(alpha: 0.3),
               width: 1.0,
             ),
           ),
@@ -318,7 +318,7 @@ class _GuestbookSectionState extends State<GuestbookSection> {
           hintStyle: _hintStyle,
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-              color: WeddingConfig.pointPink.withOpacity(0.3),
+              color: WeddingConfig.pointPink..withValues(alpha: 0.3),
               width: 1.0,
             ),
           ),
@@ -373,7 +373,10 @@ class _GuestbookSectionState extends State<GuestbookSection> {
       _nameController.clear();
       _messageController.clear();
       _passwordController.clear();
+
+      if (!mounted) return;
       FocusScope.of(context).unfocus();
+
       if (mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('소중한 축하의 말씀 감사드립니다.')));

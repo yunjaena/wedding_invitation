@@ -34,7 +34,6 @@ class _FadeInOnScrollState extends State<FadeInOnScroll>
   void dispose() {
     _controller.dispose();
     super.dispose();
-    ;
   }
 
   void _onVisibilityChanged(VisibilityInfo info) {

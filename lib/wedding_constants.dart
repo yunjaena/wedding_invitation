@@ -31,10 +31,10 @@ class WeddingConfig {
 정다운 두 사람의 시작을 따뜻하게 지켜봐 주세요.
   """;
 
-  static const Color primaryPink = Color(0xFFFFA4A4);       // 메인 핑크
-  static const Color pointPink = Color(0xFFEE8E8E);         // 아이콘 및 버튼 (진한 핑크)
+  static const Color primaryPink = Color(0xFFFFA4A4); // 메인 핑크
+  static const Color pointPink = Color(0xFFEE8E8E); // 아이콘 및 버튼 (진한 핑크)
   static const Color accountBackground = Color(0xFFFFF5F5); // 계좌 박스 (매우 연한 핑크)
-  static const Color dividerColor = Color(0xFFF0E0E0);      // 연한 분홍빛 구분선
+  static const Color dividerColor = Color(0xFFF0E0E0); // 연한 분홍빛 구분선
   static const String naverClientId = "YOUR_CLIENT_ID"; // 네이버 콘솔에서 발급받은 키 입력
   static const String introImage = 'assets/images/intro.jpeg';
 
