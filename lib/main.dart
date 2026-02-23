@@ -1,12 +1,15 @@
-import 'dart:ui' as ui; // 추가: Size 충돌 해결을 위한 alias
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map_web/flutter_naver_map_web.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+// 작성하신 파일명에 맞춰 import 하세요.
+import 'package:wedding_invitation/wedding_constants.dart';
 import 'package:wedding_invitation/painter/parking_icon_painter.dart';
 import 'package:wedding_invitation/painter/subway_icon_painter.dart';
-import 'package:wedding_invitation/wedding_constants.dart';
 import 'account_section.dart';
 import 'count_down_timer.dart';
+import 'fade_in_on_scroll.dart';
 
 void main() {
   runApp(const WeddingApp());
@@ -23,6 +26,7 @@ class WeddingApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: WeddingConfig.primaryPink,
         fontFamily: 'NotoSansKR',
+        scaffoldBackgroundColor: Colors.white,
       ),
       home: const WeddingScreen(),
     );
@@ -35,23 +39,57 @@ class WeddingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[100], // 배경은 연회색으로 하여 중앙 컨테이너 강조
       body: Center(
         child: Container(
-          width: 430,
+          width: 430, // 모바일 너비 고정
           color: Colors.white,
           child: SingleChildScrollView(
             child: Column(
               children: [
-                _buildCover(),
+                // 1. 커버 섹션
+                FadeInOnScroll(
+                  key: const ValueKey('cover'),
+                  child: _buildCover(),
+                ),
                 const SizedBox(height: 30),
-                const CountdownTimer(targetDate: WeddingConfig.targetDateTime),
+
+                // 2. 카운트다운 타이머
+                const FadeInOnScroll(
+                  key: ValueKey('countdown'),
+                  delay: Duration(milliseconds: 200),
+                  child: CountdownTimer(
+                    targetDate: WeddingConfig.targetDateTime,
+                  ),
+                ),
                 const Divider(height: 80, thickness: 1, color: Colors.black12),
-                _buildGreeting(),
+
+                // 3. 양가 부모님 및 성함
+                FadeInOnScroll(
+                  key: const ValueKey('parents'),
+                  child: _buildParentNames(),
+                ),
                 const Divider(height: 80, thickness: 1, color: Colors.black12),
-                _buildMapSection(),
+
+                // 4. 인사말
+                FadeInOnScroll(
+                  key: const ValueKey('greeting'),
+                  child: _buildGreeting(),
+                ),
                 const Divider(height: 80, thickness: 1, color: Colors.black12),
-                const AccountSection(),
+
+                // 5. 오시는 길 (주소 상단 배치 수정본)
+                FadeInOnScroll(
+                  key: const ValueKey('map'),
+                  child: _buildMapSection(),
+                ),
+                const Divider(height: 80, thickness: 1, color: Colors.black12),
+
+                // 6. 계좌 정보 (핑크 테마 적용 섹션)
+                const FadeInOnScroll(
+                  key: ValueKey('account'),
+                  child: AccountSection(),
+                ),
                 const SizedBox(height: 100),
               ],
             ),
@@ -60,6 +98,8 @@ class WeddingScreen extends StatelessWidget {
       ),
     );
   }
+
+  // --- 위젯 빌더 함수들 ---
 
   Widget _buildCover() {
     return Column(
@@ -91,6 +131,52 @@ class WeddingScreen extends StatelessWidget {
           style: TextStyle(fontSize: 16, height: 1.5, color: Colors.black87),
         ),
       ],
+    );
+  }
+
+  Widget _buildParentNames() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Column(
+        children: [
+          _parentRichText(
+            father: WeddingConfig.groomFatherName,
+            mother: WeddingConfig.groomMotherName,
+            title: WeddingConfig.groomTitle,
+            name: WeddingConfig.groomFirstName,
+          ),
+          const SizedBox(height: 8),
+          _parentRichText(
+            father: WeddingConfig.brideFatherName,
+            mother: WeddingConfig.brideMotherName,
+            title: WeddingConfig.brideTitle,
+            name: WeddingConfig.brideFirstName,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _parentRichText(
+      {required String father,
+      required String mother,
+      required String title,
+      required String name}) {
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        style: const TextStyle(
+            fontSize: 15,
+            height: 1.8,
+            color: Colors.black87,
+            fontFamily: 'NotoSansKR'),
+        children: [
+          TextSpan(text: '$father · $mother'),
+          TextSpan(text: '의 $title '),
+          TextSpan(
+              text: name, style: const TextStyle(fontWeight: FontWeight.bold)),
+        ],
+      ),
     );
   }
 
@@ -127,16 +213,28 @@ class WeddingScreen extends StatelessWidget {
         children: [
           const Text('오시는 길',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 12),
-          const Text(WeddingConfig.address,
-              style: TextStyle(fontSize: 15, color: Colors.black87)),
           const SizedBox(height: 20),
 
+          // 장소명과 주소 순서 변경 및 스타일 적용
+          const Text(
+            WeddingConfig.weddingLocation,
+            style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            WeddingConfig.address,
+            style: TextStyle(fontSize: 14, color: Colors.black54),
+          ),
+
+          const SizedBox(height: 24),
           Container(
             height: 350,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.black12),
+              border: Border.all(color: WeddingConfig.dividerColor),
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
@@ -160,37 +258,31 @@ class WeddingScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-
           Row(
             children: [
               _buildMapButton(
-                label: '네이버',
-                url:
-                    '${WeddingConfig.naverMapUrl}${Uri.encodeComponent(WeddingConfig.address)}',
-                color: const Color(0xFF03C75A),
-              ),
+                  label: '네이버',
+                  url:
+                      '${WeddingConfig.naverMapUrl}${Uri.encodeComponent(WeddingConfig.address)}',
+                  color: const Color(0xFF03C75A)),
               const SizedBox(width: 8),
               _buildMapButton(
-                label: '카카오',
-                url:
-                    '${WeddingConfig.kakaoMapUrl}${Uri.encodeComponent(WeddingConfig.weddingLocation)},${WeddingConfig.lat},${WeddingConfig.lng}',
-                color: const Color(0xFFFEE500),
-                textColor: Colors.black87,
-              ),
+                  label: '카카오',
+                  url:
+                      '${WeddingConfig.kakaoMapUrl}${Uri.encodeComponent(WeddingConfig.weddingLocation)},${WeddingConfig.lat},${WeddingConfig.lng}',
+                  color: const Color(0xFFFEE500),
+                  textColor: Colors.black87),
               const SizedBox(width: 8),
               _buildMapButton(
-                label: '구글',
-                url:
-                    'https://www.google.com/maps/search/?api=1&query=${WeddingConfig.lat},${WeddingConfig.lng}',
-                color: Colors.white,
-                textColor: Colors.black87,
-                isOutlined: true,
-              ),
+                  label: '구글',
+                  url:
+                      'https://www.google.com/maps/search/?api=1&query=${WeddingConfig.lat},${WeddingConfig.lng}',
+                  color: Colors.white,
+                  textColor: Colors.black87,
+                  isOutlined: true),
             ],
           ),
-
           const SizedBox(height: 32),
-
           _buildTransportInfo(
             painter: ParkingIconPainter(iconColor: Colors.blueAccent),
             title: '주차 안내',
@@ -209,13 +301,12 @@ class WeddingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMapButton({
-    required String label,
-    required String url,
-    required Color color,
-    Color textColor = Colors.white,
-    bool isOutlined = false,
-  }) {
+  Widget _buildMapButton(
+      {required String label,
+      required String url,
+      required Color color,
+      Color textColor = Colors.white,
+      bool isOutlined = false}) {
     return Expanded(
       child: ElevatedButton(
         onPressed: () async {
@@ -240,25 +331,22 @@ class WeddingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTransportInfo({
-    required CustomPainter painter,
-    required String title,
-    required String content,
-    required Color iconColor,
-  }) {
+  Widget _buildTransportInfo(
+      {required CustomPainter painter,
+      required String title,
+      required String content,
+      required Color iconColor}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           width: 44,
-          // 고정 크기 지정
           height: 44,
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: iconColor.withOpacity(0.1),
+            color: iconColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          // ui.Size를 사용하여 패키지 충돌 해결
           child: CustomPaint(
             size: const ui.Size(36, 36),
             painter: painter,

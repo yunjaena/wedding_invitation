@@ -1,70 +1,130 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base href="/"> <meta charset="UTF-8">
+  <base href="/">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <title>윤재 & 세정 결혼식에 초대합니다</title>
 
   <link rel="icon" type="image/png" href="favicon.ico"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Rounded" rel="stylesheet">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="나윤재 ❤️ 신세정 결혼합니다">
   <meta property="og:description" content="2026년 4월 11일(토) 오후 5시 | 베스트웨스턴프리미어 강남">
   <meta property="og:image" content="https://wedding-invitation-2b1.pages.dev/icons/preview.jpeg">
   <meta property="og:url" content="https://wedding-invitation-2b1.pages.dev/">
+  <link rel="apple-touch-icon" href="icons/intro.jpeg">
+
+  <script>
+    var W = {
+      groomName: '윤재',
+      brideName: '세정',
+      date: '2026. 04. 11',
+      title: '결혼식에 초대합니다'
+    };
+  </script>
 
   <style>
-    /* 로딩 화면 레이아웃 */
     #loading-indicator {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: #ffffff;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: linear-gradient(180deg, #fff5f5 0%, #ffffff 50%, #fff5f5 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 99999; /* 가장 위에 오도록 보장 */
+      z-index: 99999;
+      animation: fadeIn 0.3s ease-out;
+      transition: opacity 0.5s ease-out;
     }
 
-    /* 원형 로더 크기 대폭 확대 */
-    .loader {
-      width: 70px;
-      height: 70px;
-      border: 8px solid #f3f3f3;
-      border-top: 8px solid #FFA4A4;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
+    #loading-indicator.fade-out {
+      opacity: 0;
     }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
-    /* 텍스트 가독성 */
-    .loading-text {
-      margin-top: 30px;
+    .loading-names {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      font-size: 26px;
+      letter-spacing: 6px;
+      color: #333;
+      animation: slideUp 0.8s ease-out both;
+    }
+
+    .loading-ampersand {
+      display: block;
+      font-family: 'Georgia', serif;
+      font-size: 20px;
+      color: #FFA4A4;
+      margin: 12px 0;
+      animation: slideUp 0.8s ease-out 0.15s both;
+    }
+
+    .loading-date {
       font-family: sans-serif;
-      font-size: 20px; /* 모바일에서 큼직하게 */
-      font-weight: bold;
-      color: #555;
-      text-align: center;
+      font-size: 13px;
+      letter-spacing: 3px;
+      color: #999;
+      margin-top: 8px;
+      animation: slideUp 0.8s ease-out 0.3s both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .loading-bar-track {
+      width: 120px;
+      height: 2px;
+      background: #f0e0e0;
+      border-radius: 1px;
+      margin-top: 40px;
+      overflow: hidden;
+      animation: slideUp 0.8s ease-out 0.45s both;
+    }
+
+    .loading-bar-fill {
+      width: 40%;
+      height: 100%;
+      background: #FFA4A4;
+      border-radius: 1px;
+      animation: barSlide 1.2s ease-in-out infinite;
+    }
+
+    @keyframes barSlide {
+      0% { transform: translateX(-120px); }
+      100% { transform: translateX(300px); }
     }
   </style>
 </head>
 <body>
 
 <div id="loading-indicator">
-  <div class="loader"></div>
-  <p class="loading-text">청첩장을 불러오고 있습니다...</p>
+  <div class="loading-names" id="l-groom"></div>
+  <span class="loading-ampersand">&</span>
+  <div class="loading-names" id="l-bride"></div>
+  <div class="loading-date" id="l-date"></div>
+  <div class="loading-bar-track">
+    <div class="loading-bar-fill"></div>
+  </div>
 </div>
 
 <script>
+  // 설정값 텍스트 주입
+  document.getElementById('l-groom').textContent = W.groomName;
+  document.getElementById('l-bride').textContent = W.brideName;
+  document.getElementById('l-date').textContent = W.date;
+
   window.addEventListener('load', function(ev) {
-    // Flutter 엔진이 로드되기 전까지는 로딩 화면을 지우지 않습니다.
     {{flutter_js}}
     {{flutter_build_config}}
 
@@ -72,10 +132,13 @@
       onEntrypointLoaded: function(engineInitializer) {
         engineInitializer.initializeEngine().then(function(appRunner) {
           appRunner.runApp().then(function() {
-            // 앱 실행이 완전히 완료된 후 로딩 인디케이터 제거
+            // 앱 실행 완료 후 페이드 아웃 효과와 함께 제거
             var loader = document.getElementById('loading-indicator');
             if (loader) {
-              loader.style.display = 'none'; // 혹은 remove()
+              loader.classList.add('fade-out');
+              setTimeout(function() {
+                loader.remove();
+              }, 500);
             }
           });
         });
@@ -83,6 +146,5 @@
     });
   });
 </script>
-
 </body>
 </html>

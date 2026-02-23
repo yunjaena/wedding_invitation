@@ -105,31 +105,43 @@ class _CountdownTimerState extends State<CountdownTimer> {
 
   // 시간 숫자와 단위를 보여주는 박스
   Widget _buildTimeBox(String time, String label, {bool isLast = false}) {
-    return Column(
-      children: [
-        Text(
-          time,
-          style: const TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.w300,
-            color: Colors.black87,
+    return Container(
+      width: 64,
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      decoration: BoxDecoration(
+          color: const Color(0xFFFFF5F5),
+          borderRadius: BorderRadius.circular(12)),
+      child: Column(
+        children: [
+          Text(
+            time,
+            style: const TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.w300,
+              color: Colors.black87,
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
-      ],
+          const SizedBox(height: 4),
+          Text(label,
+              style: const TextStyle(
+                fontSize: 10,
+                color: Colors.grey,
+                letterSpacing: 0.5,
+              )),
+        ],
+      ),
     );
   }
 
   Widget _buildSeparator() {
     return const Padding(
       // symmetric 대신 only를 사용하여 하단 여백(bottom)을 명시합니다.
-      padding: EdgeInsets.only(left: 10, right: 10, bottom: 15),
+      padding: EdgeInsets.only(left: 6, right: 6, bottom: 15),
       child: Text(
         ':',
         style: TextStyle(
           fontSize: 20,
-          color: Colors.black12,
+          color: Color(0xFFFFCCCC),
           fontWeight: FontWeight.bold,
         ),
       ),
