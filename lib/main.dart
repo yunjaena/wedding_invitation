@@ -15,13 +15,9 @@ import 'firebase_options.dart';
 import 'guestbook_section.dart';
 
 void main() async {
-  // 1. 플러터 엔진 초기화 보장
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Future.delayed(const Duration(milliseconds: 100));
-
   try {
-    // 2. Firebase 초기화 (설정값이 완벽해야 합니다)
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
