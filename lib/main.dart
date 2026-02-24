@@ -214,22 +214,56 @@ class WeddingScreen extends StatelessWidget {
   }
 
   Widget _buildGreeting() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.0),
+    const String rawText = WeddingConfig.greetingBody;
+    List<TextSpan> parseHtmlText(String text) {
+      final List<TextSpan> spans = [];
+      final regExp = RegExp(r'<b>(.*?)</b>', dotAll: true);
+      int lastIndex = 0;
+
+      for (final match in regExp.allMatches(text)) {
+        if (match.start > lastIndex) {
+          spans.add(TextSpan(text: text.substring(lastIndex, match.start)));
+        }
+        spans.add(TextSpan(
+          text: match.group(1),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: WeddingConfig.primaryPink, // 강조색
+            fontSize: 17,
+          ),
+        ));
+        lastIndex = match.end;
+      }
+
+      if (lastIndex < text.length) {
+        spans.add(TextSpan(text: text.substring(lastIndex)));
+      }
+      return spans;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
         children: [
-          Text(
+          const Text(
             WeddingConfig.greetingTitle,
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: WeddingConfig.primaryPink),
           ),
-          SizedBox(height: 24),
-          Text(
-            WeddingConfig.greetingBody,
+          const SizedBox(height: 24),
+          RichText(
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 15, height: 2.0, color: Colors.black87),
+            text: TextSpan(
+              style: const TextStyle(
+                fontSize: 15,
+                height: 2.2, // 줄 간격을 넉넉히 주면 더 읽기 좋습니다
+                color: Colors.black87,
+                fontFamily: 'NotoSansKR',
+              ),
+              children: parseHtmlText(rawText),
+            ),
           ),
         ],
       ),

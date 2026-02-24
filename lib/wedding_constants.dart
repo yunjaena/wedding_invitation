@@ -25,11 +25,11 @@ class WeddingConfig {
 
   static const String greetingTitle = "초대합니다";
   static const String greetingBody = """
-윤슬보다 빛나는 서로의 진심을 택했습니다.
-재촉하기보다 같은 보폭으로 함께 걷겠습니다.
-세월 속에서도 이 손의 온기만은 잊지 않겠습니다.
-정다운 두 사람의 시작을 따뜻하게 지켜봐 주세요.
-  """;
+<b>윤</b>슬보다 빛나는 서로의 진심을 택했습니다.
+<b>재</b>촉하기보다 같은 보폭으로 함께 걷겠습니다.
+<b>세</b>월 속에서도 이 손의 온기만은 잊지 않겠습니다.
+<b>정</b>다운 두 사람의 시작을 따뜻하게 지켜봐 주세요.
+""";
 
   static const Color primaryPink = Color(0xFFFFA4A4); // 메인 핑크
   static const Color pointPink = Color(0xFFEE8E8E); // 아이콘 및 버튼 (진한 핑크)
@@ -39,8 +39,8 @@ class WeddingConfig {
   static const String introImage = 'assets/images/intro.jpeg';
 
   static const List<Map<String, String>> groomAccounts = [
-    {'bank': 'IBK기업은행', 'number': '1002-311-005187', 'owner': '나일성'},
-    {'bank': '우리은행', 'number': '167-068634-01-018', 'owner': '정진희'},
+    {'bank': 'IBK기업은행', 'number': '167-068634-01-018', 'owner': '나일성'},
+    {'bank': '우리은행', 'number': '1002-311-005187', 'owner': '정진희'},
     {'bank': '신한은행', 'number': '110-437-161617', 'owner': '나윤재'}
   ];
   static const List<Map<String, String>> brideAccounts = [
@@ -50,6 +50,7 @@ class WeddingConfig {
   ];
 
   static const String parkingInfo = "호텔 내 전용 주차장 (하객 3시간 무료)";
+
   // \n을 사용해 줄바꿈이 정상적으로 나오도록 수정했습니다.
   static const String subwayInfo = "9호선 신논현역 3번 출구 도보 5분\n9호선 언주역 1번 출구 도보 5분";
 
