@@ -35,11 +35,3 @@ flutter:
 
   assets:
     - assets/images/
-
-  # 폰트 설정 (NotoSansKR 파일이 assets/fonts 폴더에 있어야 합니다)
-  fonts:
-    - family: NotoSansKR
-      fonts:
-        - asset: assets/fonts/NotoSansKR-Regular.ttf
-        - asset: assets/fonts/NotoSansKR-Bold.ttf
-          weight: 700

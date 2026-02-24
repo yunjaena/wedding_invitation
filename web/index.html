@@ -13,11 +13,44 @@
   <meta property="og:url" content="https://wedding-invitation-2b1.pages.dev/">
   <link rel="icon" type="image/png" href="favicon.ico"/>
   <link rel="apple-touch-icon" href="icons/intro.webp">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Rounded" rel="stylesheet">
 
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <link rel="preload" href="assets/assets/images/intro.webp" as="image" type="image/webp">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+
+  <style>
+    /* 폰트 및 기본 스타일 최적화 */
+    html, body {
+      background-color: #ffffff;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+    }
+
+    /* 로딩 화면 전용 스타일 */
+    #loading-indicator {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(180deg, #fff5f5 0%, #ffffff 50%, #fff5f5 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 99999;
+    }
+
+    /* [스킵 최적화] 페이드아웃 효과는 유지하되 더 빠르게 */
+    #loading-indicator.fade-out {
+      opacity: 0;
+      transition: opacity 0.3s ease-out;
+      pointer-events: none;
+    }
+
+    .loading-names { font-family: 'Georgia', serif !important; font-size: 26px; letter-spacing: 6px; color: #333; }
+    .loading-ampersand { display: block; font-family: 'Georgia', serif !important; font-size: 20px; color: #FFA4A4; margin: 12px 0; }
+    .loading-date { font-family: sans-serif; font-size: 13px; letter-spacing: 3px; color: #999; margin-top: 8px; }
+    .loading-bar-track { width: 120px; height: 2px; background: #f0e0e0; margin-top: 40px; overflow: hidden; }
+    .loading-bar-fill { width: 40%; height: 100%; background: #FFA4A4; animation: barSlide 1.2s infinite; }
+    @keyframes barSlide { 0% { transform: translateX(-120px); } 100% { transform: translateX(300px); } }
+
+    /* 플러터 앱 내부 폰트 강제 적용 */
+    flt-glass-pane {
+      font-family: 'Pretendard', sans-serif !important;
+    }
+  </style>
 
   <script>
     var W = {
@@ -25,23 +58,6 @@
       date: '2026. 04. 11', title: '결혼식에 초대합니다'
     };
   </script>
-
-  <style>
-    /* 사용자님의 핑크 로딩 스타일 */
-    #loading-indicator {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: linear-gradient(180deg, #fff5f5 0%, #ffffff 50%, #fff5f5 100%);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      z-index: 99999; transition: opacity 0.5s ease-out;
-    }
-    #loading-indicator.fade-out { opacity: 0; }
-    .loading-names { font-family: 'Georgia', serif; font-size: 26px; letter-spacing: 6px; color: #333; }
-    .loading-ampersand { display: block; font-family: 'Georgia', serif; font-size: 20px; color: #FFA4A4; margin: 12px 0; }
-    .loading-date { font-family: sans-serif; font-size: 13px; letter-spacing: 3px; color: #999; margin-top: 8px; }
-    .loading-bar-track { width: 120px; height: 2px; background: #f0e0e0; margin-top: 40px; overflow: hidden; }
-    .loading-bar-fill { width: 40%; height: 100%; background: #FFA4A4; animation: barSlide 1.2s infinite; }
-    @keyframes barSlide { 0% { transform: translateX(-120px); } 100% { transform: translateX(300px); } }
-  </style>
 </head>
 <body>
 
@@ -54,33 +70,33 @@
 </div>
 
 <script>
-  // 1. 로딩 데이터 주입 (기존 유지)
+  // 로딩 데이터 주입
   document.getElementById('l-groom').textContent = W.groomName;
   document.getElementById('l-bride').textContent = W.brideName;
   document.getElementById('l-date').textContent = W.date;
 
-  // 2. 최신 부트스트랩 로직
   {{flutter_js}}
   {{flutter_build_config}}
 
-  // 에러 방지를 위해 최소한의 설정으로 호출합니다.
   _flutter.loader.load({
     onEntrypointLoaded: async function(engineInitializer) {
-      // 빌드 호환성 에러를 피하기 위해 initializeEngine에서 renderer를 명시합니다.
+      // [최적화] renderer를 html로 고정하여 용량 절감 및 호환성 확보
       const appRunner = await engineInitializer.initializeEngine({
-        renderer: "html" // 네이버 지도와 파이어베이스 통신을 위해 필수
+        renderer: "html",
+        useColorEmoji: true
       });
 
       await appRunner.runApp();
 
-      // 앱 실행 후 로딩 화면 제거
-      window.setTimeout(function() {
-        var loader = document.getElementById('loading-indicator');
-        if (loader) {
-          loader.classList.add('fade-out');
-          setTimeout(() => loader.remove(), 500);
-        }
-      }, 200);
+      // [스킵 최적화] 앱 실행 준비가 끝나면 즉시 로딩창 제거 루틴 시작
+      var loader = document.getElementById('loading-indicator');
+      if (loader) {
+        loader.classList.add('fade-out');
+        // 애니메이션이 끝난 후 완전히 제거
+        setTimeout(function() {
+          loader.remove();
+        }, 300);
+      }
     }
   });
 </script>

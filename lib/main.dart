@@ -38,7 +38,7 @@ class WeddingApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: WeddingConfig.primaryPink,
-        fontFamily: 'NotoSansKR',
+        fontFamily: 'Pretendard',
         scaffoldBackgroundColor: Colors.white,
       ),
       home: const WeddingScreen(),
@@ -200,7 +200,7 @@ class WeddingScreen extends StatelessWidget {
           fontSize: 15,
           height: 1.8,
           color: Colors.black87,
-          fontFamily: 'NotoSansKR',
+          fontFamily: 'Pretendard',
         ),
         children: [
           TextSpan(text: '$father · $mother'),
@@ -264,7 +264,7 @@ class WeddingScreen extends StatelessWidget {
                 fontSize: 15,
                 height: 2.2, // 줄 간격을 넉넉히 주면 더 읽기 좋습니다
                 color: Colors.black87,
-                fontFamily: 'NotoSansKR',
+                fontFamily: 'Pretendard',
               ),
               children: parseHtmlText(rawText),
             ),
