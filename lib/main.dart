@@ -16,29 +16,20 @@ import 'guestbook_section.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-
-    FirebaseFirestore.instance.settings = const Settings(
-      persistenceEnabled: false, // 웹에서는 캐시가 오히려 전송을 방해할 수 있음
-      sslEnabled: true,
-      host: 'firestore.googleapis.com',
-    );
-  } catch (e) {
-    if (kDebugMode) {
-      print("Firebase 초기화 실패: $e");
-    }
-  }
-
-  // 3. 앱 실행
   runApp(const WeddingApp());
 }
 
 class WeddingApp extends StatelessWidget {
   const WeddingApp({super.key});
+
+  static final Future<FirebaseApp> _firebaseInit = Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ).then((app) {
+    FirebaseFirestore.instance.settings = const Settings(
+      persistenceEnabled: false,
+    );
+    return app;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -114,11 +105,21 @@ class WeddingScreen extends StatelessWidget {
                 ),
 
                 const Divider(height: 80, thickness: 1, color: Colors.black12),
-                const FadeInOnScroll(
-                  key: ValueKey('guestbook'),
-                  child: GuestbookSection(), // 새로 만든 방명록 위젯
+                FutureBuilder(
+                  future: WeddingApp._firebaseInit,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return const GuestbookSection();
+                    }
+                    // 초기화 중일 때는 아주 작은 로딩 표시만 하거나 빈 박스 출력
+                    return const SizedBox(
+                      height: 200,
+                      child: Center(
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    );
+                  },
                 ),
-
                 const SizedBox(height: 100),
               ],
             ),
@@ -186,24 +187,28 @@ class WeddingScreen extends StatelessWidget {
     );
   }
 
-  Widget _parentRichText(
-      {required String father,
-      required String mother,
-      required String title,
-      required String name}) {
+  Widget _parentRichText({
+    required String father,
+    required String mother,
+    required String title,
+    required String name,
+  }) {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
         style: const TextStyle(
-            fontSize: 15,
-            height: 1.8,
-            color: Colors.black87,
-            fontFamily: 'NotoSansKR'),
+          fontSize: 15,
+          height: 1.8,
+          color: Colors.black87,
+          fontFamily: 'NotoSansKR',
+        ),
         children: [
           TextSpan(text: '$father · $mother'),
           TextSpan(text: '의 $title '),
           TextSpan(
-              text: name, style: const TextStyle(fontWeight: FontWeight.bold)),
+            text: name,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );
@@ -220,14 +225,16 @@ class WeddingScreen extends StatelessWidget {
         if (match.start > lastIndex) {
           spans.add(TextSpan(text: text.substring(lastIndex, match.start)));
         }
-        spans.add(TextSpan(
-          text: match.group(1),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: WeddingConfig.primaryPink, // 강조색
-            fontSize: 17,
+        spans.add(
+          TextSpan(
+            text: match.group(1),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: WeddingConfig.primaryPink, // 강조색
+              fontSize: 17,
+            ),
           ),
-        ));
+        );
         lastIndex = match.end;
       }
 
@@ -244,9 +251,10 @@ class WeddingScreen extends StatelessWidget {
           const Text(
             WeddingConfig.greetingTitle,
             style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: WeddingConfig.primaryPink),
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: WeddingConfig.primaryPink,
+            ),
           ),
           const SizedBox(height: 24),
           RichText(
@@ -267,24 +275,29 @@ class WeddingScreen extends StatelessWidget {
   }
 
   Widget _buildMapSection() {
-    const String apiKey = String.fromEnvironment('NAVER_CLIENT_ID',
-        defaultValue: WeddingConfig.naverClientId);
+    const String apiKey = String.fromEnvironment(
+      'NAVER_CLIENT_ID',
+      defaultValue: WeddingConfig.naverClientId,
+    );
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
         children: [
-          const Text('오시는 길',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const Text(
+            '오시는 길',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 20),
 
           // 장소명과 주소 순서 변경 및 스타일 적용
           const Text(
             WeddingConfig.weddingLocation,
             style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87),
+              fontSize: 17,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
           ),
           const SizedBox(height: 6),
           const Text(
@@ -308,25 +321,28 @@ class WeddingScreen extends StatelessWidget {
           Row(
             children: [
               _buildMapButton(
-                  label: '네이버',
-                  url:
-                      '${WeddingConfig.naverMapUrl}${Uri.encodeComponent(WeddingConfig.address)}',
-                  color: const Color(0xFF03C75A)),
+                label: '네이버',
+                url:
+                    '${WeddingConfig.naverMapUrl}${Uri.encodeComponent(WeddingConfig.address)}',
+                color: const Color(0xFF03C75A),
+              ),
               const SizedBox(width: 8),
               _buildMapButton(
-                  label: '카카오',
-                  url:
-                      '${WeddingConfig.kakaoMapUrl}${Uri.encodeComponent(WeddingConfig.weddingLocation)},${WeddingConfig.lat},${WeddingConfig.lng}',
-                  color: const Color(0xFFFEE500),
-                  textColor: Colors.black87),
+                label: '카카오',
+                url:
+                    '${WeddingConfig.kakaoMapUrl}${Uri.encodeComponent(WeddingConfig.weddingLocation)},${WeddingConfig.lat},${WeddingConfig.lng}',
+                color: const Color(0xFFFEE500),
+                textColor: Colors.black87,
+              ),
               const SizedBox(width: 8),
               _buildMapButton(
-                  label: '구글',
-                  url:
-                      'https://www.google.com/maps/search/?api=1&query=${WeddingConfig.lat},${WeddingConfig.lng}',
-                  color: Colors.white,
-                  textColor: Colors.black87,
-                  isOutlined: true),
+                label: '구글',
+                url:
+                    'https://www.google.com/maps/search/?api=1&query=${WeddingConfig.lat},${WeddingConfig.lng}',
+                color: Colors.white,
+                textColor: Colors.black87,
+                isOutlined: true,
+              ),
             ],
           ),
           const SizedBox(height: 32),
@@ -348,12 +364,13 @@ class WeddingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMapButton(
-      {required String label,
-      required String url,
-      required Color color,
-      Color textColor = Colors.white,
-      bool isOutlined = false}) {
+  Widget _buildMapButton({
+    required String label,
+    required String url,
+    required Color color,
+    Color textColor = Colors.white,
+    bool isOutlined = false,
+  }) {
     return Expanded(
       child: ElevatedButton(
         onPressed: () async {
@@ -371,18 +388,24 @@ class WeddingScreen extends StatelessWidget {
               : BorderSide.none,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
-        child: Text(label,
-            style: TextStyle(
-                color: textColor, fontWeight: FontWeight.bold, fontSize: 13)),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: textColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildTransportInfo(
-      {required CustomPainter painter,
-      required String title,
-      required String content,
-      required Color iconColor}) {
+  Widget _buildTransportInfo({
+    required CustomPainter painter,
+    required String title,
+    required String content,
+    required Color iconColor,
+  }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -394,25 +417,30 @@ class WeddingScreen extends StatelessWidget {
             color: iconColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: CustomPaint(
-            size: const ui.Size(36, 36),
-            painter: painter,
-          ),
+          child: CustomPaint(size: const ui.Size(36, 36), painter: painter),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title,
-                  style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black54)),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black54,
+                ),
+              ),
               const SizedBox(height: 4),
-              Text(content,
-                  style: const TextStyle(
-                      fontSize: 15, color: Colors.black87, height: 1.4)),
+              Text(
+                content,
+                style: const TextStyle(
+                  fontSize: 15,
+                  color: Colors.black87,
+                  height: 1.4,
+                ),
+              ),
             ],
           ),
         ),
