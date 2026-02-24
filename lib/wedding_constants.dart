@@ -36,7 +36,7 @@ class WeddingConfig {
   static const Color accountBackground = Color(0xFFFFF5F5); // 계좌 박스 (매우 연한 핑크)
   static const Color dividerColor = Color(0xFFF0E0E0); // 연한 분홍빛 구분선
   static const String naverClientId = "YOUR_CLIENT_ID"; // 네이버 콘솔에서 발급받은 키 입력
-  static const String introImage = 'assets/images/intro.jpeg';
+  static const String introImage = 'assets/images/intro.webp';
 
   static const List<Map<String, String>> groomAccounts = [
     {'bank': 'IBK기업은행', 'number': '167-068634-01-018', 'owner': '나일성'},
