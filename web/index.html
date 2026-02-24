@@ -47,9 +47,10 @@
     .loading-bar-fill { width: 40%; height: 100%; background: #FFA4A4; animation: barSlide 1.2s infinite; }
     @keyframes barSlide { 0% { transform: translateX(-120px); } 100% { transform: translateX(300px); } }
 
-    /* 플러터 내부 캔버스 폰트 강제 */
-    flt-glass-pane, flt-scene-host {
+    html, body, flt-glass-pane, flt-scene-host, flt-canvas {
       font-family: 'Pretendard', sans-serif !important;
+      -webkit-font-smoothing: antialiased;
+       text-rendering: optimizeLegibility;
     }
   </style>
 
